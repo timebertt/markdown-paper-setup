@@ -1,6 +1,0 @@
-name: 'Paper Build'
-author: 'Tim Ebert'
-description: 'Runs Pandoc LaTeX paper build in a docker container'
-runs:
-  using: 'docker'
-  image: 'Dockerfile'
