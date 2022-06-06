@@ -16,13 +16,21 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+        - target: basic
+          imageSuffix: ""
+        - target: python
+          imageSuffix: "/python"
+
     steps:
     - uses: actions/checkout@v2
     - uses: docker/metadata-action@v3
       id: meta
       with:
         images: |
-          ghcr.io/${{ github.repository_owner }}/markdown-paper-setup
+          ghcr.io/${{ github.repository_owner }}/markdown-paper-setup${{ matrix.imageSuffix}}
         tags: |
           type=semver,pattern={{version}}
           type=schedule
@@ -50,11 +58,12 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         context: .
+        target: ${{ matrix.target }}
         platforms: linux/amd64,linux/arm64
         push: ${{ github.event_name != 'pull_request' }}
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
-        cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/markdown-paper-setup:latest
+        cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/markdown-paper-setup${{ matrix.imageSuffix}}:latest
         cache-to: type=inline
         secrets: |
           GIT_AUTH_TOKEN=${{ github.token }}
