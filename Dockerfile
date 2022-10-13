@@ -10,4 +10,5 @@ FROM basic AS python
 RUN apk add --no-cache python3 py3-matplotlib=~3.3 && \
     ln -sf python3 /usr/bin/python && \
     python3 -m ensurepip && \
-    python3 -m pip install --no-cache --upgrade pip wheel setuptools
+    python3 -m pip install --no-cache --upgrade pip wheel setuptools && \
+    python3 -m pip install --no-cache --upgrade pandocfilters~=1.5 Pygments~=2.13
