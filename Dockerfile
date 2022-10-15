@@ -7,8 +7,12 @@ ENTRYPOINT ["/bin/sh"]
 
 FROM basic AS python
 
-RUN apk add --no-cache python3 py3-matplotlib=~3.3 && \
+RUN apk add --no-cache python3 && \
     ln -sf python3 /usr/bin/python && \
+    # setup
     python3 -m ensurepip && \
     python3 -m pip install --no-cache --upgrade pip wheel setuptools && \
-    python3 -m pip install --no-cache --upgrade pandocfilters~=1.5 Pygments~=2.13
+    # packages for adding pandoc filters in python
+    python3 -m pip install --no-cache --upgrade pandocfilters~=1.5 Pygments~=2.13 && \
+    # packages for plotting in python
+    apk add --no-cache py3-matplotlib=~3.3 py3-pandas=~1.2
