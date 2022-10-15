@@ -1,4 +1,4 @@
-FROM pandoc/core:2.18.0.0 AS basic
+FROM pandoc/core:2.19.2.0 AS basic
 
 RUN apk add --no-cache texlive-full
 RUN apk add --no-cache make jq
@@ -15,4 +15,4 @@ RUN apk add --no-cache python3 && \
     # packages for adding pandoc filters in python
     python3 -m pip install --no-cache --upgrade pandocfilters~=1.5 Pygments~=2.13 && \
     # packages for plotting in python
-    apk add --no-cache py3-matplotlib=~3.3 py3-pandas=~1.2
+    apk add --no-cache py3-matplotlib=~3.5 py3-pandas=~1.3
