@@ -1,7 +1,14 @@
 FROM pandoc/core:2.19.2.0 AS basic
 
-RUN apk add --no-cache texlive-full
+# build dependencies
 RUN apk add --no-cache make jq
+
+# slimmed down installation of texlive (drop big packages texmf-dist-lang and texmf-dist-fontsextra)
+RUN apk add --no-cache \
+      # texlive-full without texmf-dist-full
+      texlive texlive-doc texlive-luatex texlive-xetex xdvik texlive-dvi \
+      # texmf-dist-most without texmf-dist-fontsextra
+      texmf-dist texmf-dist-bibtexextra texmf-dist-formatsextra texmf-dist-games texmf-dist-humanities texmf-dist-latexextra texmf-dist-music texmf-dist-pictures texmf-dist-pstricks texmf-dist-publishers texmf-dist-science
 
 ENTRYPOINT ["/bin/sh"]
 
