@@ -58,7 +58,7 @@ jobs:
       uses: docker/build-push-action@v3
       with:
         context: .
-        target: test
+        target: python
         platforms: ${{ matrix.platform }}
         push: true
         tags: ${{ steps.meta.outputs.tags }}
