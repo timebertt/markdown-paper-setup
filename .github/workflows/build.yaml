@@ -69,7 +69,7 @@ jobs:
           GIT_AUTH_TOKEN=${{ github.token }}
     - name: Output image digest
       id: digest
-      run: echo "${{ matrix.platform }}=$(echo ${{ steps.build.outputs.digest }} | tr '/' '_')" >> $GITHUB_OUTPUT
+      run: echo "$(echo ${{ matrix.platform }} | tr '/' '_')=${{ steps.build.outputs.digest }}" >> $GITHUB_OUTPUT
 
   push:
     runs-on: ubuntu-latest
