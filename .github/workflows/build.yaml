@@ -23,6 +23,9 @@ jobs:
     strategy:
       matrix:
         platform: [linux/amd64, linux/arm64]
+    outputs:
+      linux_amd64: ${{ steps.digest.outputs.linux_amd64 }}
+      linux_arm64: ${{ steps.digest.outputs.linux_arm64 }}
 
     steps:
     - uses: actions/checkout@v3
@@ -72,13 +75,27 @@ jobs:
           GIT_AUTH_TOKEN=${{ github.token }}
     - name: Output image digest
       id: digest
-      run: echo "::set-output name=${{ matrix.platform }}::$(echo ${{ steps.build.outputs.digest }} | tr '/' '_')"
+      run: echo "${{ matrix.platform }}=$(echo ${{ steps.build.outputs.digest }} | tr '/' '_')" >> $GITHUB_OUTPUT
 
   push:
     runs-on: ubuntu-latest
     needs: build
 
     steps:
+    - uses: actions/checkout@v3
+    - uses: docker/metadata-action@v4
+      id: meta
+      with:
+        images: |
+          ghcr.io/${{ github.repository_owner }}/markdown-paper-setup
+        tags: |
+          type=semver,pattern={{version}}
+          type=ref,event=branch
+          type=ref,event=tag
+          type=ref,event=pr
+          type=sha
+        flavor: |
+          latest=${{ github.ref == 'refs/heads/master' }}
     - name: Login to GHCR
       if: github.event_name != 'pull_request'
       uses: docker/login-action@v2
@@ -87,10 +104,10 @@ jobs:
         username: ${{ github.repository_owner }}
         password: ${{ secrets.GITHUB_TOKEN }}
     - name: Create and Push Multi-Arch Images
-      run:
-        for tag in ${{ needs.build.steps.meta.outputs.tags }} ; do
+      run: |
+        for tag in $(echo "${{ steps.meta.outputs.tags }}") ; do
           docker manifest create $tag \
-            --amend ${{ needs.build.steps.digest.outputs.linux_amd64 }} \
-            --amend ${{ needs.build.steps.digest.outputs.linux_arm64 }}
+            --amend ${{ needs.build.outputs.linux_amd64 }} \
+            --amend ${{ needs.build.outputs.linux_arm64 }}
           docker manifest push $tag
         done
