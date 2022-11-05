@@ -35,13 +35,7 @@ jobs:
         images: |
           ghcr.io/${{ github.repository_owner }}/markdown-paper-setup
         tags: |
-          type=semver,pattern={{version}}
-          type=ref,event=branch
-          type=ref,event=tag
-          type=ref,event=pr
-          type=sha
-        flavor: |
-          latest=${{ github.ref == 'refs/heads/master' }}
+          ${{ matrix.platform }}
     - name: Set up QEMU
       if: ${{ matrix.platform != 'linux/amd64' }}
       uses: docker/setup-qemu-action@v2
@@ -66,7 +60,7 @@ jobs:
         context: .
         target: test
         platforms: ${{ matrix.platform }}
-        push: false
+        push: true
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
         cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/markdown-paper-setup:buildcache
