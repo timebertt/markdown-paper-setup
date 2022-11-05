@@ -16,6 +16,9 @@ ARG LUA_VERSION=5.4
 
 WORKDIR /data
 
+# needed for running binary built in debian-based haskell image
+RUN apk add --no-cache gcompat
+
 COPY --from=pandoc-builder /root/.cabal/bin/pandoc /root/.cabal/bin/pandoc-crossref /usr/local/bin/
 
 # similar to https://github.com/pandoc/dockerfiles/blob/29f1e47a107e153786c8766a9d5d7afc34d29551/alpine/Dockerfile
