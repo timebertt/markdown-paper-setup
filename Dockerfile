@@ -11,12 +11,10 @@ RUN git clone --branch=$PANDOC_VERSION --depth=1 --quiet https://github.com/jgm/
 WORKDIR /usr/src/pandoc
 
 COPY cabal.root.config /root/.cabal/config
-COPY freeze/pandoc-$PANDOC_VERSION.project.freeze \
-     ./cabal.project.freeze
 
 RUN cabal --version && \
     ghc --version && \
-    printf "extra-packages: pandoc-crossref\n" > cabal.project.local && \
+    printf "extra-packages: pandoc-crossref-$PANDOC_CROSSREF_VERSION\n" > cabal.project.local && \
     cabal v2-update && \
     cabal v2-build --allow-newer 'lib:pandoc' --disable-tests --disable-bench --jobs -fembed_data_files --enable-executable-static \
       . pandoc-crossref && \
