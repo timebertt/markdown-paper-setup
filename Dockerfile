@@ -1,5 +1,7 @@
 FROM alpine:3.16 AS test
 
+ARG TARGETOS
+ARG TARGETARCH
 ARG PANDOC_VERSION=2.19.2
 
 RUN wget https://github.com/jgm/pandoc/releases/download/$PANDOC_VERSION/pandoc-$PANDOC_VERSION-$TARGETOS-$TARGETARCH.tar.gz -O - \
