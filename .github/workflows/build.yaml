@@ -25,9 +25,6 @@ jobs:
         platform: [linux/amd64, linux/arm64]
 
     steps:
-    - name: Define Build ID
-      id: build-id
-      run: echo "build-id=$(echo ${{ matrix.platform }} |  tr '/' '_')" >> $GITHUB_OUTPUT
     - uses: actions/checkout@v3
     - uses: docker/metadata-action@v4
       id: meta
@@ -60,7 +57,7 @@ jobs:
         username: ${{ github.repository_owner }}
         password: ${{ secrets.GITHUB_TOKEN }}
     - name: Build
-      id: build_${{ steps.build-id.outputs.build-id }}
+      id: build_${{ matrix.platform }}
       uses: docker/build-push-action@v3
       with:
         context: .
@@ -89,7 +86,7 @@ jobs:
       run:
         for tag in ${{ needs.build.steps.meta.outputs.tags }} ; do
           docker manifest create $tag \
-            --amend ${{ needs.build.steps.build_linux_amd64.outputs.digest }} \
-            --amend ${{ needs.build.steps.build_linux_arm64.outputs.digest }}
+            --amend ${{ needs.build.steps.build_linux/amd64.outputs.digest }} \
+            --amend ${{ needs.build.steps.build_linux/arm64.outputs.digest }}
           docker manifest push $tag
         done
