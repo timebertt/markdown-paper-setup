@@ -1,14 +1,30 @@
 # pandoc/core is currently adm64-only, build handcrafted pandoc base image for multi-arch support
+# similar to https://github.com/pandoc/dockerfiles/blob/f23bdd37b28d023a7f2596c1f72fece48f3420fc/ubuntu/Dockerfile
 # ref https://github.com/pandoc/dockerfiles/issues/134
 FROM haskell:9.4-slim AS pandoc-builder
 
 ARG PANDOC_VERSION=2.19.2
 ARG PANDOC_CROSSREF_VERSION=0.3.13.0
 
-WORKDIR /work
+RUN git clone --branch=$PANDOC_VERSION --depth=1 --quiet https://github.com/jgm/pandoc /usr/src/pandoc
 
-RUN cabal v2-update && \
-    cabal v2-install --install-method=copy -f-export-dynamic -fembed_data_files --enable-executable-static --ghc-options '-j4 +RTS -A256m -RTS -split-sections -optc-Os -optl=-pthread' -j4 pandoc-$PANDOC_VERSION pandoc-crossref-$PANDOC_CROSSREF_VERSION
+WORKDIR /usr/src/pandoc
+
+COPY cabal.root.config /root/.cabal/config
+COPY freeze/pandoc-$PANDOC_VERSION.project.freeze \
+     ./cabal.project.freeze
+
+RUN cabal --version && \
+    ghc --version && \
+    printf "extra-packages: pandoc-crossref\n" > cabal.project.local && \
+    cabal v2-update && \
+    cabal v2-build --allow-newer 'lib:pandoc' --disable-tests --disable-bench --jobs -fembed_data_files --enable-executable-static \
+      . pandoc-crossref && \
+    # Cabal's exec stripping doesn't seem to work reliably, let's do it here.
+    find dist-newstyle \
+      -name 'pandoc*' -type f -perm -u+x \
+      -exec strip '{}' ';' \
+      -exec cp '{}' /usr/local/bin/ ';'
 
 FROM alpine:3.16 AS pandoc
 
@@ -19,7 +35,7 @@ WORKDIR /data
 # needed for running binary built in debian-based haskell image
 RUN apk add --no-cache gcompat
 
-COPY --from=pandoc-builder /root/.cabal/bin/pandoc /root/.cabal/bin/pandoc-crossref /usr/local/bin/
+COPY --from=pandoc-builder /usr/local/bin/pandoc /usr/local/bin/pandoc-crossref /usr/local/bin/
 
 # similar to https://github.com/pandoc/dockerfiles/blob/29f1e47a107e153786c8766a9d5d7afc34d29551/alpine/Dockerfile
 RUN apk --no-cache add gmp libffi lua$LUA_VERSION lua$LUA_VERSION-lpeg librsvg
