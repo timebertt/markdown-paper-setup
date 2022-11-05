@@ -6,9 +6,13 @@ on:
     - published
   push:
     branches:
-    - master
+    - '*'
     tags:
     - v*
+    paths-ignore:
+    - 'docs/**'
+    - '**/*.md'
+  pull_request:
     paths-ignore:
     - 'docs/**'
     - '**/*.md'
