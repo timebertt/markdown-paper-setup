@@ -1,4 +1,29 @@
-FROM pandoc/core:2.19.2.0 AS basic
+# pandoc/core is currently adm64-only, build handcrafted pandoc base image for multi-arch support
+# ref https://github.com/pandoc/dockerfiles/issues/134
+FROM haskell:9.4-slim AS pandoc-builder
+
+ARG PANDOC_VERSION=2.19.2
+ARG PANDOC_CROSSREF_VERSION=0.3.13.0
+
+WORKDIR /work
+
+RUN cabal v2-update && \
+    cabal v2-install --jobs --install-method=copy pandoc-$PANDOC_VERSION pandoc-crossref-$PANDOC_CROSSREF_VERSION
+
+FROM alpine:3.16 AS pandoc
+
+ARG LUA_VERSION=5.4
+
+WORKDIR /data
+
+COPY --from=pandoc-builder /root/.cabal/bin/pandoc /root/.cabal/bin/pandoc-crossref /usr/local/bin/
+
+# similar to https://github.com/pandoc/dockerfiles/blob/29f1e47a107e153786c8766a9d5d7afc34d29551/alpine/Dockerfile
+RUN apk --no-cache add gmp libffi lua$LUA_VERSION lua$LUA_VERSION-lpeg librsvg
+
+ENTRYPOINT ["/usr/local/bin/pandoc"]
+
+FROM pandoc AS basic
 
 # build dependencies
 RUN apk add --no-cache make jq
