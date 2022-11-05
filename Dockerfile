@@ -1,3 +1,10 @@
+FROM alpine:3.16 AS test
+
+ARG PANDOC_VERSION=2.19.2
+
+RUN wget https://github.com/jgm/pandoc/releases/download/$PANDOC_VERSION/pandoc-$PANDOC_VERSION-$TARGETOS-$TARGETARCH.tar.gz -O - \
+    | tar -xzvf - --strip-components 2 -C /usr/local/bin pandoc-$PANDOC_VERSION/bin/pandoc
+
 # pandoc/core is currently adm64-only, build handcrafted pandoc base image for multi-arch support
 # similar to https://github.com/pandoc/dockerfiles/blob/f23bdd37b28d023a7f2596c1f72fece48f3420fc/ubuntu/Dockerfile
 # ref https://github.com/pandoc/dockerfiles/issues/134
