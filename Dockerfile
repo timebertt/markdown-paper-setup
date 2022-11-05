@@ -1,25 +1,30 @@
 # pandoc/core is currently adm64-only, build handcrafted pandoc base image for multi-arch support
+# pandoc itself offers arm64 builds on github releases, but we have to build pandoc-crossref ourselves
 # ref https://github.com/pandoc/dockerfiles/issues/134
 FROM haskell:9.4-slim AS pandoc-builder
 
-ARG PANDOC_VERSION=2.19.2
 ARG PANDOC_CROSSREF_VERSION=0.3.13.0
 
 WORKDIR /work
 
 RUN cabal v2-update && \
-    cabal v2-install --jobs --install-method=copy pandoc-$PANDOC_VERSION pandoc-crossref-$PANDOC_CROSSREF_VERSION
+    cabal v2-install --jobs --install-method=copy pandoc-crossref-$PANDOC_CROSSREF_VERSION
 
 FROM alpine:3.16 AS pandoc
 
+ARG PANDOC_VERSION=2.19.2
 ARG LUA_VERSION=5.4
+ARG TARGETARCH
 
 WORKDIR /data
 
 # needed for running binary built in debian-based haskell image
 RUN apk add --no-cache gcompat
 
-COPY --from=pandoc-builder /root/.cabal/bin/pandoc /root/.cabal/bin/pandoc-crossref /usr/local/bin/
+COPY --from=pandoc-builder /root/.cabal/bin/pandoc-crossref /usr/local/bin/
+
+RUN wget https://github.com/jgm/pandoc/releases/download/$PANDOC_VERSION/pandoc-$PANDOC_VERSION-linux-$TARGETARCH.tar.gz -O - \
+    | tar -xzvf - --strip-components 2 -C /usr/local/bin pandoc-$PANDOC_VERSION/bin/pandoc
 
 # similar to https://github.com/pandoc/dockerfiles/blob/29f1e47a107e153786c8766a9d5d7afc34d29551/alpine/Dockerfile
 RUN apk --no-cache add gmp libffi lua$LUA_VERSION lua$LUA_VERSION-lpeg librsvg
