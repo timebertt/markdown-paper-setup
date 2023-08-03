@@ -76,6 +76,6 @@ RUN apk add --no-cache python3 && \
     python3 -m ensurepip && \
     python3 -m pip install --no-cache --upgrade pip wheel setuptools && \
     # packages for adding pandoc filters in python
-    python3 -m pip install --no-cache --upgrade pandocfilters~=1.5 Pygments~=2.13 && \
+    python3 -m pip install --no-cache --upgrade pandocfilters~=1.5 Pygments~=2.15 && \
     # packages for plotting in python
     apk add --no-cache py3-matplotlib=~3.5 py3-pandas=~1.3
