@@ -21,6 +21,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
+      # There is no point in building the images in parallel, the main build time is spent in the common base layers.
+      # Use the matrix for simplifying the job description, but build them sequentially.
+      max-parallel: 1
+      fail-fast: true
+
       matrix:
         include:
         - target: basic
