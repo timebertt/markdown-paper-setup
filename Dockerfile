@@ -33,7 +33,7 @@ RUN cabal v2-build --enable-executable-static . && \
 # print the builder's libc version so that it is easier to identify when something breaks in the runtime image
 RUN ldd --version
 
-FROM alpine:3.16 AS pandoc
+FROM alpine:3.18 AS pandoc
 
 ARG PANDOC_VERSION=3.1.6
 ARG LUA_VERSION=5.4
@@ -78,4 +78,4 @@ RUN apk add --no-cache python3 && \
     # packages for adding pandoc filters in python
     python3 -m pip install --no-cache --upgrade pandocfilters~=1.5 Pygments~=2.15 && \
     # packages for plotting in python
-    apk add --no-cache py3-matplotlib=~3.5 py3-pandas=~1.3
+    apk add --no-cache py3-matplotlib=~3.7 py3-pandas=~1.5
