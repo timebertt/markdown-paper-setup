@@ -4,8 +4,8 @@
 # ref https://github.com/pandoc/dockerfiles/issues/134
 FROM haskell:9.4.5-slim-buster AS pandoc-crossref-builder
 
-ARG PANDOC_VERSION=2.19.2
-ARG PANDOC_CROSSREF_VERSION=0.3.13.0
+ARG PANDOC_VERSION=3.1.6
+ARG PANDOC_CROSSREF_VERSION=0.3.16.0d
 
 RUN git clone --branch=v$PANDOC_CROSSREF_VERSION --depth=1 --quiet https://github.com/lierdakil/pandoc-crossref /usr/src/pandoc-crossref
 
@@ -35,7 +35,7 @@ RUN ldd --version
 
 FROM alpine:3.16 AS pandoc
 
-ARG PANDOC_VERSION=2.19.2
+ARG PANDOC_VERSION=3.1.6
 ARG LUA_VERSION=5.4
 ARG TARGETARCH
 
