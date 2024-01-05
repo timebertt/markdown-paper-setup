@@ -1,0 +1,33 @@
+package:
+  name: python
+  version: 0.1
+  target-architecture:
+    - x86_64
+    - aarch64
+  epoch: 0
+  description: Pandoc filter for cross-references
+  dependencies:
+    runtime:
+      - python3=~3.11
+      - py3-matplotlib=~3.7
+      - py3-pandas=~1.5
+
+environment:
+  contents:
+    repositories:
+      - https://dl-cdn.alpinelinux.org/alpine/edge/main
+    packages:
+      - alpine-base
+      - python3
+
+pipeline:
+  - runs: |
+      # install pip to resulting image
+      python3 -m ensurepip --root ${{targets.destdir}}/usr/bin
+
+      # install pip for installing other modules
+      python3 -m ensurepip
+
+      python3 -m pip install --install-option="--prefix=${{targets.destdir}}/usr/lib/python3.11/site-packages" \
+        --no-cache --upgrade \
+        pandocfilters~=1.5 Pygments~=2.15

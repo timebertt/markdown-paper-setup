@@ -1,0 +1,47 @@
+package:
+  name: pandoc
+  version: 3.1.11
+  target-architecture:
+    - x86_64
+    - aarch64
+  epoch: 0
+  description: Pandoc filter for cross-references
+  url: https://pandoc.org/
+  copyright:
+    - license: GPL-2.0
+  dependencies:
+    runtime:
+      - gmp
+      - libffi
+      - lua${{vars.luaVersion}}
+      - lua${{vars.luaVersion}}-lpeg
+      - librsvg
+
+vars:
+  luaVersion: 5.4
+
+environment:
+  contents:
+    repositories:
+      - https://dl-cdn.alpinelinux.org/alpine/edge/main
+    packages:
+      - alpine-base
+
+pipeline:
+  - assertions:
+      required-steps: 1
+    pipeline:
+      - if: ${{build.arch}} == 'x86_64'
+        uses: fetch
+        with:
+          uri: https://github.com/jgm/pandoc/releases/download/${{package.version}}/pandoc-${{package.version}}-linux-amd64.tar.gz
+          expected-sha256: c573fc25bc0880879bfff9a929a2a9c6834a6c5e4d7d1669fb23eddeaef37937
+      - if: ${{build.arch}} == 'aarch64'
+        uses: fetch
+        with:
+          uri: https://github.com/jgm/pandoc/releases/download/${{package.version}}/pandoc-${{package.version}}-linux-arm64.tar.gz
+          expected-sha256: d7737918fa30377783df0c7f6b7e6bdbbea9607c9c2f0b5ee6e473647a3194a5
+  - runs: |
+      outdir=${{targets.destdir}}/usr/bin
+      mkdir -p $outdir
+      cp bin/pandoc* $outdir

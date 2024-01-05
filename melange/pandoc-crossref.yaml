@@ -1,0 +1,41 @@
+package:
+  name: pandoc-crossref
+  version: 0.3.17.0b
+  target-architecture:
+    - x86_64
+    - aarch64
+  epoch: 0
+  description: Pandoc filter for cross-references
+  url: https://github.com/lierdakil/pandoc-crossref
+  copyright:
+    - license: GPL-2.0
+
+vars:
+  pandocVersion: 3.1.11
+
+environment:
+  contents:
+    repositories:
+      - https://dl-cdn.alpinelinux.org/alpine/edge/main
+      - https://dl-cdn.alpinelinux.org/alpine/edge/community
+    packages:
+      - alpine-base
+      - g++
+      - zlib-dev
+      - ghc
+      - cabal
+
+pipeline:
+  - uses: git-checkout
+    with:
+      repository: https://github.com/lierdakil/pandoc-crossref
+      tag: v${{package.version}}
+      expected-commit: 0538049db8e96fe275ebc8e56baeaf60649eae7c
+  - runs: |
+      cabal user-config init --force --augment="store-dir: /var/cache/melange" --augment="install-method: copy"
+  - runs: cabal v2-update
+  - runs: cp misc/Linux-build-cabal-config ./cabal.project
+  - runs: cabal v2-configure --constraint pandoc==${{vars.pandocVersion}} --constraint zip-archive'>='0.4.2.1
+  - runs: cabal v2-build --only-dependencies
+  - runs: cabal v2-build
+  - runs: cabal v2-install --installdir=${{targets.destdir}}/usr/bin
