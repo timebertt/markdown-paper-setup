@@ -1,0 +1,33 @@
+# Generated from https://pypi.org/project/python-dateutil/
+package:
+  name: py3-python-dateutil
+  version: 2.8.2
+  epoch: 0
+  description: Extensions to the standard Python datetime module
+  copyright:
+    - license: Dual License
+  dependencies:
+    runtime:
+      - py3-six
+      - python-3
+environment:
+  contents:
+    packages:
+      - build-base
+      - busybox
+      - ca-certificates-bundle
+      - wolfi-base
+pipeline:
+  - uses: git-checkout
+    with:
+      expected-commit: 6b035517571e63b6a63a493740c5506ec1e5da44
+      repository: https://github.com/dateutil/dateutil
+      tag: ${{package.version}}
+  - name: Python Build
+    uses: python/build-wheel
+  - uses: strip
+update:
+  enabled: true
+  manual: false
+  github:
+    identifier: dateutil/dateutil

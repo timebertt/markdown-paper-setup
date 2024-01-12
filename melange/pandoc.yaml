@@ -4,7 +4,7 @@ package:
   target-architecture:
     - x86_64
     - aarch64
-  epoch: 0
+  epoch: 1
   description: Pandoc filter for cross-references
   url: https://pandoc.org/
   copyright:
@@ -13,19 +13,18 @@ package:
     runtime:
       - gmp
       - libffi
-      - lua${{vars.luaVersion}}
-      - lua${{vars.luaVersion}}-lpeg
-      - librsvg
-
-vars:
-  luaVersion: 5.4
+      - lua5.4
+      - lua-lpeg
+      # - librsvg
 
 environment:
   contents:
+    keyring:
+      - https://packages.wolfi.dev/os/wolfi-signing.rsa.pub
     repositories:
-      - https://dl-cdn.alpinelinux.org/alpine/edge/main
+      - https://packages.wolfi.dev/os
     packages:
-      - alpine-base
+      - wolfi-base
 
 pipeline:
   - assertions:
@@ -36,11 +35,13 @@ pipeline:
         with:
           uri: https://github.com/jgm/pandoc/releases/download/${{package.version}}/pandoc-${{package.version}}-linux-amd64.tar.gz
           expected-sha256: c573fc25bc0880879bfff9a929a2a9c6834a6c5e4d7d1669fb23eddeaef37937
+          timeout: 30
       - if: ${{build.arch}} == 'aarch64'
         uses: fetch
         with:
           uri: https://github.com/jgm/pandoc/releases/download/${{package.version}}/pandoc-${{package.version}}-linux-arm64.tar.gz
           expected-sha256: d7737918fa30377783df0c7f6b7e6bdbbea9607c9c2f0b5ee6e473647a3194a5
+          timeout: 30
   - runs: |
       outdir=${{targets.destdir}}/usr/bin
       mkdir -p $outdir

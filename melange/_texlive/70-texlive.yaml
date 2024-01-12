@@ -1,0 +1,99 @@
+# Generated from https://git.alpinelinux.org/aports/plain/community/texlive/APKBUILD
+package:
+    name: texlive
+    version: "20230506.66984"
+    epoch: 0
+    description: Comprehensive TeX document production system
+    copyright:
+        - license: GPL-2.0-or-later AND GPL-3.0-or-later
+    scriptlets:
+        trigger:
+            script: FIXME
+            paths:
+                - FIXME
+environment:
+    contents:
+        repositories:
+            - https://packages.wolfi.dev/os
+        keyring:
+            - https://packages.wolfi.dev/os/wolfi-signing.rsa.pub
+        packages:
+            - autoconf
+            - automake
+            - build-base
+            - busybox
+            - ca-certificates-bundle
+            - autoconf
+            - automake
+            - cairo-dev
+            - fontconfig-dev
+            - freetype-dev
+            - gd-dev
+            - gmp-dev
+            - graphite2-dev
+            - harfbuzz-dev
+            - icu-dev
+            - libpaper-dev
+            - libpng-dev
+            - libxaw-dev
+            - libxmu-dev
+            - motif-dev
+            - mpfr-dev
+            - pixman-dev
+            - poppler-dev
+            - potrace-dev
+            - zlib-dev
+            - zziplib-dev
+            - ghostscript
+            - perl
+            - texmf-dist
+pipeline:
+    - uses: fetch
+      with:
+        expected-sha256: d3eca31c6a16a168f66471ce3837b7c950826967162eab04d58233f52462527e
+        uri: https://github.com/TeX-Live/texlive-source/archive/871c7a2856d70e1a9703d1f72f0587b9995dba5f.tar.gz
+    - uses: autoconf/configure
+    - uses: autoconf/make
+    - uses: autoconf/make-install
+    - uses: strip
+subpackages:
+    - name: texlive-dbg
+      pipeline:
+        - uses: split/FIXME
+      description: texlive FIXME
+    - name: texlive-dev
+      pipeline:
+        - uses: split/dev
+      dependencies:
+        runtime:
+            - texlive
+            - ghostscript
+            - perl
+            - texmf-dist
+      description: texlive dev
+    - name: libsynctex
+      pipeline:
+        - runs: FIXME
+    - name: texlive-doc
+      pipeline:
+        - uses: split/manpages
+      description: texlive manpages
+    - name: xdvik
+      pipeline:
+        - runs: FIXME
+    - name: texlive-dvi
+      pipeline:
+        - uses: split/FIXME
+      description: texlive FIXME
+    - name: texlive-full
+      pipeline:
+        - uses: split/FIXME
+      description: texlive FIXME
+    - name: texlive-xetex
+      pipeline:
+        - uses: split/FIXME
+      description: texlive FIXME
+    - name: texlive-luatex
+      pipeline:
+        - uses: split/FIXME
+      description: texlive FIXME

@@ -1,0 +1,77 @@
+package:
+  name: texlive
+  version: 0.1
+  target-architecture:
+    - x86_64
+    - aarch64
+  epoch: 12
+  description: Slimmed down installation of texlive (drops big packages texmf-dist-lang and texmf-dist-fontsextra)
+  dependencies:
+    runtime:
+      - wget
+      - perl
+
+environment:
+  contents:
+    packages:
+      - wolfi-base
+      - wget
+      - perl
+pipeline:
+  - uses: fetch
+    with:
+      # wget https://ftp.tu-chemnitz.de/pub/tug/historic/systems/texlive/2023/install-tl-unx.tar.gz -O - | tar -xzvf - --strip-components=1
+      uri: https://ftp.tu-chemnitz.de/pub/tug/historic/systems/texlive/2023/install-tl-unx.tar.gz
+      expected-sha256: d97bdb3b1903428e56373e70861b24db448243d74d950cdff96f4e888f008605
+  # - runs: |
+  #     mkdir -p ${{targets.destdir}}/usr/share/texlive
+  # configure installation
+  - runs: |
+      cat <<EOF > texlive.profile
+      selected_scheme scheme-custom
+      TEXDIR /usr/share
+      TEXMFCONFIG ~/.texlive/texmf-config
+      TEXMFHOME ~/texmf
+      TEXMFLOCAL /usr/share/texmf-local
+      TEXMFSYSCONFIG /usr/share/texmf-config
+      TEXMFSYSVAR /usr/share/texmf-var
+      TEXMFVAR ~/.texlive/texmf-var
+      binary_${{build.arch}}-linux 1
+      collection-basic 1
+      collection-langenglish 1
+      collection-langgerman 1
+      collection-latex 1
+      collection-latexrecommended 1
+      instopt_adjustpath 1
+      instopt_adjustrepo 1
+      instopt_letter 0
+      instopt_portable 0
+      instopt_write18_restricted 1
+      tlpdbopt_autobackup 1
+      tlpdbopt_backupdir tlpkg/backups
+      tlpdbopt_create_formats 1
+      tlpdbopt_desktop_integration 1
+      tlpdbopt_file_assocs 1
+      tlpdbopt_generate_updmap 0
+      tlpdbopt_install_docfiles 0
+      tlpdbopt_install_srcfiles 0
+      tlpdbopt_post_code 1
+      tlpdbopt_sys_bin /usr/local/bin
+      tlpdbopt_sys_info /usr/local/share/info
+      tlpdbopt_sys_man /usr/local/share/man
+      tlpdbopt_w32_multi_user 1
+      EOF
+  # base installation
+  - runs: |
+      perl install-tl --no-interaction --profile texlive.profile
+  # install any additionally needed packages
+  - runs: |
+      tlmgr install latexmk
+  # export installation to apk
+  - runs: |
+      mkdir -p ${{targets.destdir}}/usr/bin
+      cp /usr/local/bin/* ${{targets.destdir}}/usr/bin
+      ln -s /usr/share/texmf-dist/scripts/latexmk/latexmk.pl ${{targets.destdir}}/usr/bin/latexmk
+
+      mkdir -p ${{targets.destdir}}/usr/share
+      cp -R /usr/share/texmf-config /usr/share/texmf-dist /usr/share/texmf-var /usr/share/tlpkg ${{targets.destdir}}/usr/share

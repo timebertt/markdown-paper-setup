@@ -1,0 +1,32 @@
+# Generated from https://pypi.org/project/zipp/
+package:
+  name: py3-zipp
+  version: 3.17.0
+  epoch: 0
+  description: Backport of pathlib-compatible object wrapper for zip files
+  copyright:
+    - license: ""
+  dependencies:
+    runtime:
+      - python-3
+environment:
+  contents:
+    packages:
+      - build-base
+      - busybox
+      - ca-certificates-bundle
+      - wolfi-base
+pipeline:
+  - uses: git-checkout
+    with:
+      expected-commit: 5c59b561f5b79631a846b8823d5033cc1407b511
+      repository: https://github.com/jaraco/zipp
+      tag: v${{package.version}}
+  - name: Python Build
+    uses: python/build-wheel
+  - uses: strip
+update:
+  enabled: true
+  manual: false
+  github:
+    identifier: jaraco/zipp

@@ -1,0 +1,32 @@
+# Generated from https://pypi.org/project/typing-extensions/
+package:
+  name: py3-typing-extensions
+  version: 4.9.0
+  epoch: 0
+  description: Backported and experimental type hints for Python
+  copyright:
+    - license: Dual License
+  dependencies:
+    runtime:
+      - python-3
+environment:
+  contents:
+    packages:
+      - build-base
+      - busybox
+      - ca-certificates-bundle
+      - wolfi-base
+pipeline:
+  - uses: git-checkout
+    with:
+      expected-commit: fc461d6faf4585849b561f2e4cbb06e9db095307
+      repository: https://github.com/python/typing_extensions
+      tag: ${{package.version}}
+  - name: Python Build
+    uses: python/build-wheel
+  - uses: strip
+update:
+  enabled: true
+  manual: false
+  github:
+    identifier: python/typing_extensions

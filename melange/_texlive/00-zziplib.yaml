@@ -1,0 +1,50 @@
+# Generated from https://git.alpinelinux.org/aports/plain/community/zziplib/APKBUILD
+package:
+  name: zziplib
+  version: 0.13.72
+  epoch: 0
+  description: Lightweight library to easily extract data from zip files
+  copyright:
+    - license: LGPL-2.0-or-later MPL-1.1
+environment:
+  contents:
+    repositories:
+      - https://packages.wolfi.dev/os
+    keyring:
+      - https://packages.wolfi.dev/os/wolfi-signing.rsa.pub
+    packages:
+      - autoconf
+      - automake
+      - build-base
+      - busybox
+      - ca-certificates-bundle
+      - cmake
+      - zlib-dev
+      - python3
+      - bash
+      - samurai
+pipeline:
+  - uses: fetch
+    with:
+      expected-sha256: 93ef44bf1f1ea24fc66080426a469df82fa631d13ca3b2e4abaeab89538518dc
+      uri: https://github.com/gdraheim/zziplib/archive/v${{package.version}}.tar.gz
+  - uses: autoconf/configure
+  - uses: autoconf/make
+  - uses: autoconf/make-install
+  - uses: strip
+subpackages:
+  - name: zziplib-dev
+    pipeline:
+      - uses: split/dev
+    dependencies:
+      runtime:
+        - zziplib
+    description: zziplib dev
+  - name: zziplib-doc
+    pipeline:
+      - uses: split/manpages
+    description: zziplib manpages
+  # - name: zziplib-utils
+  #   pipeline:
+  #     - uses: split/FIXME
+  #   description: zziplib FIXME

@@ -1,0 +1,32 @@
+# Generated from https://pypi.org/project/six/
+package:
+  name: py3-six
+  version: 1.16.0
+  epoch: 0
+  description: Python 2 and 3 compatibility utilities
+  copyright:
+    - license: MIT
+  dependencies:
+    runtime:
+      - python-3
+environment:
+  contents:
+    packages:
+      - build-base
+      - busybox
+      - ca-certificates-bundle
+      - wolfi-base
+pipeline:
+  - uses: git-checkout
+    with:
+      expected-commit: 65486e4383f9f411da95937451205d3c7b61b9e1
+      repository: https://github.com/benjaminp/six
+      tag: ${{package.version}}
+  - name: Python Build
+    uses: python/build-wheel
+  - uses: strip
+update:
+  enabled: true
+  manual: false
+  github:
+    identifier: benjaminp/six

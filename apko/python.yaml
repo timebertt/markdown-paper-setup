@@ -1,0 +1,47 @@
+contents:
+  keyring:
+    - https://packages.wolfi.dev/os/wolfi-signing.rsa.pub
+  repositories:
+    - https://packages.wolfi.dev/os
+    # - https://dl-cdn.alpinelinux.org/alpine/v3.19/main
+    # - https://dl-cdn.alpinelinux.org/alpine/v3.19/community
+    - "@local ./packages"
+    - "@local2 ./packages2"
+  packages:
+    - wolfi-base
+    - pandoc@local
+    - pandoc-crossref@local
+    - texlive@local2
+    - tools@local
+
+    - python3
+    - numpy
+    - py3-contourpy
+    - py3-cycler
+    - py3-fonttools
+    - py3-importlib-resources
+    - py3-kiwisolver
+    - py3-matplotlib@local
+    - py3-packaging
+    - py3-pandas
+    - py3-pandocfilters
+    - py3-pillow
+    - py3-pygments
+    - py3-pyparsing
+    - py3-python-dateutil
+    # - py3-pytz
+    - py3-six
+    - py3-typing-extensions
+    - py3-tzdata
+    - py3-zipp
+
+work-dir: /work
+
+archs:
+  - x86_64
+  - aarch64
+
+cmd: /bin/sh -l
+
+environment:
+  PATH: /usr/sbin:/sbin:/usr/bin:/bin

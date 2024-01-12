@@ -1,0 +1,32 @@
+# Generated from https://pypi.org/project/packaging/
+package:
+  name: py3-packaging
+  version: "23.2"
+  epoch: 0
+  description: Core utilities for Python packages
+  copyright:
+    - license: ""
+  dependencies:
+    runtime:
+      - python-3
+environment:
+  contents:
+    packages:
+      - build-base
+      - busybox
+      - ca-certificates-bundle
+      - wolfi-base
+pipeline:
+  - uses: git-checkout
+    with:
+      expected-commit: b3a5d7d68991c040615d5345bb55f61de53ba176
+      repository: https://github.com/pypa/packaging
+      tag: ${{package.version}}
+  - name: Python Build
+    uses: python/build-wheel
+  - uses: strip
+update:
+  enabled: true
+  manual: false
+  github:
+    identifier: pypa/packaging

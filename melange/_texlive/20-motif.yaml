@@ -1,0 +1,64 @@
+# Generated from https://git.alpinelinux.org/aports/plain/community/motif/APKBUILD
+package:
+  name: motif
+  version: 2.3.8
+  epoch: 0
+  description: The Motif library
+  copyright:
+    - license: LGPL-2.1-or-later
+environment:
+  contents:
+    repositories:
+      - https://packages.wolfi.dev/os
+    keyring:
+      - https://packages.wolfi.dev/os/wolfi-signing.rsa.pub
+    packages:
+      - autoconf
+      - automake
+      - build-base
+      - busybox
+      - ca-certificates-bundle
+      - libx11-dev
+      - libxft-dev
+      - libxt-dev
+      - libxpm-dev
+      - libxext-dev
+      - xbitmaps
+      - automake
+      - autoconf
+      - libtool
+      - flex
+      - flex-libs
+      - flex-dev
+      - bison
+      - xbitmaps-dev
+pipeline:
+  - uses: fetch
+    with:
+      expected-sha256: SHA512 DOES NOT MATCH SOURCE - VALIDATE MANUALLY
+      uri: https://downloads.sourceforge.net/project/motif/Motif%20${{package.version}}%20Source%20Code/motif-${{package.version}}.tar.gz
+  - uses: autoconf/configure
+  - uses: autoconf/make
+  - uses: autoconf/make-install
+  - uses: strip
+subpackages:
+  # - name: mwm
+  #   pipeline:
+  #     - runs: FIXME
+  - name: motif-dev
+    pipeline:
+      - uses: split/dev
+    dependencies:
+      runtime:
+        - motif
+        - libx11-dev
+        - libxft-dev
+        - libxt-dev
+        - libxpm-dev
+        - libxext-dev
+        - xbitmaps
+    description: motif dev
+  - name: motif-doc
+    pipeline:
+      - uses: split/manpages
+    description: motif manpages

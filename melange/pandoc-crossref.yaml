@@ -15,15 +15,21 @@ vars:
 
 environment:
   contents:
+    keyring:
+      - https://packages.wolfi.dev/os/wolfi-signing.rsa.pub
     repositories:
-      - https://dl-cdn.alpinelinux.org/alpine/edge/main
-      - https://dl-cdn.alpinelinux.org/alpine/edge/community
+      - https://packages.wolfi.dev/os
+      - "@local ./packages"
     packages:
-      - alpine-base
-      - g++
+      - wolfi-base
+      - wget
+      - build-base
+      - ncurses
+      - ghc@local
+      - ghc-dev@local
+      - cabal@local
       - zlib-dev
-      - ghc
-      - cabal
+      # - g++
 
 pipeline:
   - uses: git-checkout
@@ -31,6 +37,9 @@ pipeline:
       repository: https://github.com/lierdakil/pandoc-crossref
       tag: v${{package.version}}
       expected-commit: 0538049db8e96fe275ebc8e56baeaf60649eae7c
+  # - runs: |
+  #     # TODO: workaround
+  #     ln -s /usr/lib/libncursesw.so.6 /usr/lib/libtinfo.so.6
   - runs: |
       cabal user-config init --force --augment="store-dir: /var/cache/melange" --augment="install-method: copy"
   - runs: cabal v2-update

@@ -1,0 +1,32 @@
+# Generated from https://pypi.org/project/pillow/
+package:
+  name: py3-pillow
+  version: 10.2.0
+  epoch: 0
+  description: Python Imaging Library (Fork)
+  copyright:
+    - license: HPND
+  dependencies:
+    runtime:
+      - python-3
+environment:
+  contents:
+    packages:
+      - build-base
+      - busybox
+      - ca-certificates-bundle
+      - wolfi-base
+pipeline:
+  - uses: git-checkout
+    with:
+      expected-commit: 6956d0b2853f5c7ec5f6ec4c60725c5a7ee73aeb
+      repository: https://github.com/python-pillow/Pillow
+      tag: ${{package.version}}
+  - name: Python Build
+    uses: python/build-wheel
+  - uses: strip
+update:
+  enabled: true
+  manual: false
+  github:
+    identifier: python-pillow/Pillow

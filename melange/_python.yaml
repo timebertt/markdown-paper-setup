@@ -1,0 +1,17 @@
+package:
+  name: python
+  version: 0.1
+  target-architecture:
+    - x86_64
+    - aarch64
+  epoch: 0
+  description: Python libraries for scientific writing
+  dependencies:
+    runtime:
+      - python3=~3.11
+      - py3-matplotlib
+      - py3-pandas
+      - py3-pandocfilters
+      - py3-Pygments
+  options:
+    no-provides: true

@@ -1,0 +1,57 @@
+package:
+  name: ghc
+  version: 9.6.4
+  epoch: 0
+  description: The Glasgow Haskell Compiler
+  copyright:
+    - license: BSD-3-Clause
+  target-architecture:
+    - x86_64
+    - aarch64
+
+environment:
+  contents:
+    keyring:
+      - https://packages.wolfi.dev/os/wolfi-signing.rsa.pub
+    repositories:
+      - https://packages.wolfi.dev/os
+    packages:
+      - wolfi-base
+      - build-base
+
+pipeline:
+  - assertions:
+      required-steps: 1
+    pipeline:
+      - if: ${{build.arch}} == 'x86_64'
+        uses: fetch
+        with:
+          uri: https://downloads.haskell.org/~ghc/${{package.version}}/ghc-${{package.version}}-x86_64-deb10-linux.tar.xz
+          expected-sha256: 59885c43902110262cda168513dc6a9cc750e3e728dffb0cdb168e44929cb014
+          timeout: 60
+      - if: ${{build.arch}} == 'aarch64'
+        uses: fetch
+        with:
+          uri: https://downloads.haskell.org/~ghc/${{package.version}}/ghc-${{package.version}}-aarch64-deb10-linux.tar.xz
+          expected-sha256: d430345a66128c858e09dd9a90e5beabc045a9a3cedf776aea3adb45d1286276
+          timeout: 60
+  - uses: autoconf/configure
+  - uses: autoconf/make-install
+  - uses: strip
+subpackages:
+  - name: ghc-doc
+    pipeline:
+      - uses: split/manpages
+    description: ghc manpages
+  - name: ghc-dev
+    pipeline:
+      - uses: split/dev
+    dependencies:
+      runtime:
+        - ghc
+        - gmp-dev
+        - libffi-dev
+        - perl
+        - gcc
+        # - llvm14 # wolfi only provides llvm15 and later, drop this dependency as we only need the headers for haskell builds
+    description: ghc dev

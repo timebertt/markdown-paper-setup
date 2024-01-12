@@ -1,0 +1,36 @@
+# Generated from https://git.alpinelinux.org/aports/plain/community/perl-unicode-linebreak/APKBUILD
+package:
+    name: perl-unicode-linebreak
+    version: "2019.001"
+    epoch: 0
+    description: 'UAX #14 Unicode Line Breaking Algorithm'
+    copyright:
+        - license: GPL PerlArtistic
+environment:
+    contents:
+        repositories:
+            - https://packages.wolfi.dev/os
+        keyring:
+            - https://packages.wolfi.dev/os/wolfi-signing.rsa.pub
+        packages:
+            - autoconf
+            - automake
+            - build-base
+            - busybox
+            - ca-certificates-bundle
+            - perl-dev
+            - perl-mime-charset
+pipeline:
+    - uses: fetch
+      with:
+        expected-sha256: 486762e4cacddcc77b13989f979a029f84630b8175e7fef17989e157d4b6318a
+        uri: https://cpan.metacpan.org/authors/id/N/NE/NEZUMI/Unicode-LineBreak-${{package.version}}.tar.gz
+    - uses: autoconf/configure
+    - uses: autoconf/make
+    - uses: autoconf/make-install
+    - uses: strip
+subpackages:
+    - name: perl-unicode-linebreak-doc
+      pipeline:
+        - uses: split/manpages
+      description: perl-unicode-linebreak manpages

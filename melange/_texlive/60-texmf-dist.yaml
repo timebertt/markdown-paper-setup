@@ -1,0 +1,183 @@
+# Generated from https://git.alpinelinux.org/aports/plain/community/texmf-dist/APKBUILD
+package:
+    name: texmf-dist
+    version: "2023.66587"
+    epoch: 0
+    description: TeX Live texmf core distribution
+    copyright:
+        - license: LPPL-1.0 LPPL-1.1 LPPL-1.2 LPPL-1.3a LPPL-1.3c GPL-2.0-only
+environment:
+    contents:
+        repositories:
+            - https://packages.wolfi.dev/os
+        keyring:
+            - https://packages.wolfi.dev/os/wolfi-signing.rsa.pub
+        packages:
+            - autoconf
+            - automake
+            - build-base
+            - busybox
+            - ca-certificates-bundle
+            - unzip
+            - xz
+            - perl-file-homedir
+            - perl-unicode-linebreak
+            - perl-yaml-tiny
+pipeline:
+    - uses: fetch
+      with:
+        expected-sha256: 2cdaf356d89351e61152243f1192a5e000a9586c67b873737f01878a3e5724ff
+        uri: https://sources.archlinux.org/other/texlive/texlive-core-${{package.version}}-src.zip
+    - uses: fetch
+      with:
+        expected-sha256: b2b0b90abb0c0a9eef5366cf0968f7e58ee84c1be688c36d751dd0577c872a3c
+        uri: https://sources.archlinux.org/other/texlive/texlive-bibtexextra-2023.66579-src.zip
+    - uses: fetch
+      with:
+        expected-sha256: c5e32f213ec81a5e85f36437d401331b49a1338dacdc2fe8bb27f9f0fbaf2e36
+        uri: https://sources.archlinux.org/other/texlive/texlive-fontsextra-2023.66328-src.zip
+    - uses: fetch
+      with:
+        expected-sha256: ffacdfacd9381cf3f21247d15cbd7b4e931855d9258edfe51fd23165cff30ca6
+        uri: https://sources.archlinux.org/other/texlive/texlive-formatsextra-2023.66186-src.zip
+    - uses: fetch
+      with:
+        expected-sha256: d5c87bdc6445260c947e1585f117efd6ef3c400af03af422939478c4237aee44
+        uri: https://sources.archlinux.org/other/texlive/texlive-games-2023.66190-src.zip
+    - uses: fetch
+      with:
+        expected-sha256: c0b0e4be08cc4fb46206e6769b48f9418ec73a11c556efb8249931d6222d94ef
+        uri: https://sources.archlinux.org/other/texlive/texlive-humanities-2023.65502-src.zip
+    - uses: fetch
+      with:
+        expected-sha256: a08c5c2d7a2eaece4d8f68eedeec64eb44b70255c84087df66679f6a59f649a0
+        uri: https://sources.archlinux.org/other/texlive/texlive-langchinese-2023.66188-src.zip
+    - uses: fetch
+      with:
+        expected-sha256: b22a0759b1e28fb0f9c2e155d9cecec23649d08e33f42adf52bc1efb04630336
+        uri: https://sources.archlinux.org/other/texlive/texlive-langcyrillic-2023.64588-src.zip
+    - uses: fetch
+      with:
+        expected-sha256: 635a2a266c01b16660421bfd5dbf5e6f11ce40d0dd63c17e0a07a637f645c1ff
+        uri: https://sources.archlinux.org/other/texlive/texlive-langextra-2023.66225-src.zip
+    - uses: fetch
+      with:
+        expected-sha256: fdf44664219be6288278466c927c8f0c8eec42c0a733555c2c56c34f890813a0
+        uri: https://sources.archlinux.org/other/texlive/texlive-langgreek-2023.66513-src.zip
+    - uses: fetch
+      with:
+        expected-sha256: f9c23022dfdecb662a2097cc6d495ad07b55e74adb9751e0f96d363b27eddc90
+        uri: https://sources.archlinux.org/other/texlive/texlive-langjapanese-2023.66482-src.zip
+    - uses: fetch
+      with:
+        expected-sha256: 9837b0b47bf33d383247c1243f0e203753d0d20038cba5b5c071028af7b9af4d
+        uri: https://sources.archlinux.org/other/texlive/texlive-langkorean-2023.66513-src.zip
+    - uses: fetch
+      with:
+        expected-sha256: 6254daf3152e9f2a7fcf1084873ee9cab150a7f04b0696c327e31da49eae6a95
+        uri: https://sources.archlinux.org/other/texlive/texlive-latexextra-2023.66551-src.zip
+    - uses: fetch
+      with:
+        expected-sha256: 83df527875cd6bb77941868f35cdc0b7b7300f25c1644fe702ded855e7f492f9
+        uri: https://sources.archlinux.org/other/texlive/texlive-music-2023.66278-src.zip
+    - uses: fetch
+      with:
+        expected-sha256: 63ff117823e8e9d23e456fc753343ca1a83224de4ad0481acf5be81e2888de0e
+        uri: https://sources.archlinux.org/other/texlive/texlive-pictures-2023.66549-src.zip
+    - uses: fetch
+      with:
+        expected-sha256: 3b0359f4e7f2efee4b96990813fe6b087f8178923e80fcb8c3d3eeaf5c8a7baf
+        uri: https://sources.archlinux.org/other/texlive/texlive-pstricks-2023.66115-src.zip
+    - uses: fetch
+      with:
+        expected-sha256: 52f9d38288dcaabfd67f0cb07fb8a48f2c709ff80e5085b298a2cedc9af88588
+        uri: https://sources.archlinux.org/other/texlive/texlive-publishers-2023.66550-src.zip
+    - uses: fetch
+      with:
+        expected-sha256: 9c5e36cdc932007bb151bd61bacdc216d1d1d682758555a4d6e0e85c51005098
+        uri: https://sources.archlinux.org/other/texlive/texlive-science-2023.66461-src.zip
+    - uses: autoconf/configure
+    - uses: autoconf/make
+    - uses: autoconf/make-install
+    - uses: strip
+subpackages:
+    - name: texmf-dist-most
+      pipeline:
+        - uses: split/FIXME
+      description: texmf-dist FIXME
+    - name: texmf-dist-lang
+      pipeline:
+        - uses: split/FIXME
+      description: texmf-dist FIXME
+    - name: texmf-dist-full
+      pipeline:
+        - uses: split/FIXME
+      description: texmf-dist FIXME
+    - name: texmf-dist-bibtexextra
+      pipeline:
+        - uses: split/FIXME
+      description: texmf-dist FIXME
+    - name: texmf-dist-fontsextra
+      pipeline:
+        - uses: split/FIXME
+      description: texmf-dist FIXME
+    - name: texmf-dist-formatsextra
+      pipeline:
+        - uses: split/FIXME
+      description: texmf-dist FIXME
+    - name: texmf-dist-games
+      pipeline:
+        - uses: split/FIXME
+      description: texmf-dist FIXME
+    - name: texmf-dist-humanities
+      pipeline:
+        - uses: split/FIXME
+      description: texmf-dist FIXME
+    - name: texmf-dist-langchinese
+      pipeline:
+        - uses: split/FIXME
+      description: texmf-dist FIXME
+    - name: texmf-dist-langcyrillic
+      pipeline:
+        - uses: split/FIXME
+      description: texmf-dist FIXME
+    - name: texmf-dist-langextra
+      pipeline:
+        - uses: split/FIXME
+      description: texmf-dist FIXME
+    - name: texmf-dist-langgreek
+      pipeline:
+        - uses: split/FIXME
+      description: texmf-dist FIXME
+    - name: texmf-dist-langjapanese
+      pipeline:
+        - uses: split/FIXME
+      description: texmf-dist FIXME
+    - name: texmf-dist-langkorean
+      pipeline:
+        - uses: split/FIXME
+      description: texmf-dist FIXME
+    - name: texmf-dist-latexextra
+      pipeline:
+        - uses: split/FIXME
+      description: texmf-dist FIXME
+    - name: texmf-dist-music
+      pipeline:
+        - uses: split/FIXME
+      description: texmf-dist FIXME
+    - name: texmf-dist-pictures
+      pipeline:
+        - uses: split/FIXME
+      description: texmf-dist FIXME
+    - name: texmf-dist-pstricks
+      pipeline:
+        - uses: split/FIXME
+      description: texmf-dist FIXME
+    - name: texmf-dist-publishers
+      pipeline:
+        - uses: split/FIXME
+      description: texmf-dist FIXME
+    - name: texmf-dist-science
+      pipeline:
+        - uses: split/FIXME
+      description: texmf-dist FIXME

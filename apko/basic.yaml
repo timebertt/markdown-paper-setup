@@ -1,0 +1,26 @@
+contents:
+  keyring:
+    - https://packages.wolfi.dev/os/wolfi-signing.rsa.pub
+  repositories:
+    - https://packages.wolfi.dev/os
+    # - https://dl-cdn.alpinelinux.org/alpine/v3.19/main
+    # - https://dl-cdn.alpinelinux.org/alpine/v3.19/community
+    - "@local ./packages"
+    - "@local2 ./packages2"
+  packages:
+    - wolfi-base
+    - pandoc@local
+    - pandoc-crossref@local
+    - texlive@local2
+    - tools@local
+
+work-dir: /work
+
+archs:
+  - x86_64
+  - aarch64
+
+cmd: /bin/sh -l
+
+environment:
+  PATH: /usr/sbin:/sbin:/usr/bin:/bin

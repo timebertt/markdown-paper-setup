@@ -1,0 +1,37 @@
+# Generated from https://pypi.org/project/matplotlib/
+package:
+  name: py3-matplotlib
+  version: 3.8.2
+  epoch: 1
+  description: Python plotting package
+  copyright:
+    - license: PSF
+  dependencies:
+    runtime:
+      - py3-contourpy
+      - py3-cycler
+      - py3-fonttools
+      - py3-kiwisolver
+      - numpy
+      - py3-packaging
+      - py3-pillow
+      - py3-pyparsing
+      - py3-python-dateutil
+      - py3-importlib-resources
+      - python-3
+environment:
+  contents:
+    packages:
+      - build-base
+      - busybox
+      - ca-certificates-bundle
+      - wolfi-base
+      - python3-dev
+pipeline:
+  - uses: fetch
+    with:
+      expected-sha256: 01a978b871b881ee76017152f1f1a0cbf6bd5f7b8ff8c96df0df1bd57d8755a1
+      uri: https://files.pythonhosted.org/packages/source/m/matplotlib/matplotlib-${{package.version}}.tar.gz
+  - name: Python Build
+    uses: python/build-wheel
+  - uses: strip

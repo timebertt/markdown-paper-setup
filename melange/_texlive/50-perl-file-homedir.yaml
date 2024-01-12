@@ -1,0 +1,36 @@
+# Generated from https://git.alpinelinux.org/aports/plain/community/perl-file-homedir/APKBUILD
+package:
+    name: perl-file-homedir
+    version: "1.006"
+    epoch: 0
+    description: Find your home and other directories on any platform
+    copyright:
+        - license: GPL-1.0-or-later OR Artistic-1.0-Perl
+environment:
+    contents:
+        repositories:
+            - https://packages.wolfi.dev/os
+        keyring:
+            - https://packages.wolfi.dev/os/wolfi-signing.rsa.pub
+        packages:
+            - autoconf
+            - automake
+            - build-base
+            - busybox
+            - ca-certificates-bundle
+            - perl
+            - perl-file-which
+pipeline:
+    - uses: fetch
+      with:
+        expected-sha256: 593737c62df0f6dab5d4122e0b4476417945bb6262c33eedc009665ef1548852
+        uri: https://cpan.metacpan.org/authors/id/R/RE/REHSACK/File-HomeDir-${{package.version}}.tar.gz
+    - uses: autoconf/configure
+    - uses: autoconf/make
+    - uses: autoconf/make-install
+    - uses: strip
+subpackages:
+    - name: perl-file-homedir-doc
+      pipeline:
+        - uses: split/manpages
+      description: perl-file-homedir manpages
